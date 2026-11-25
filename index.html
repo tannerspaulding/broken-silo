@@ -802,7 +802,7 @@ const GEO=(function(){
     const ox=(X0+X1)/2-(bx0+bx1)/2*s,oy=(Y0+Y1)/2+(by0+by1)/2*s;
     return {s,x:v=>ox+v*s,y:v=>oy-v*s,ix:px=>(px-ox)/s,iy:py=>(oy-py)/s};}
   function drawCity(x,P,water,line){
-    x.save();x.fillStyle=water;M.harbor.forEach(r=>{x.beginPath();r.forEach((p,i)=>i?x.lineTo(P.x(p[0]),P.y(p[1])):x.moveTo(P.x(p[0]),P.y(p[1])));x.closePath();x.fill();});
+    x.save();x.fillStyle=water;x.beginPath();M.harbor.forEach(r=>{r.forEach((p,i)=>i?x.lineTo(P.x(p[0]),P.y(p[1])):x.moveTo(P.x(p[0]),P.y(p[1])));x.closePath();});x.fill(); // one path, so overlapping pieces of water are painted once
     x.strokeStyle=line;x.lineWidth=1;x.setLineDash([3,4]);M.city.forEach(r=>{x.beginPath();r.forEach((p,i)=>i?x.lineTo(P.x(p[0]),P.y(p[1])):x.moveTo(P.x(p[0]),P.y(p[1])));x.closePath();x.stroke();});
     x.restore();}
   // the city's edge in a compass direction from City Hall, for listeners far away
