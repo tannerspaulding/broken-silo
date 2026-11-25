@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>How It's Made · Broken Silo</title>
+<meta name="description" content="How Broken Silo is built: the data, sound, visuals and code behind each track.">
+<meta name="author" content="Tanner Spaulding">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#EFE9DD;--ink:#1D1B18;--sun:#D2592C;--soft:#5E5A52;--rule:rgba(29,27,24,.18);--wash:rgba(29,27,24,.05);
+  --disp:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --gl:max(16px,env(safe-area-inset-left));--gr:max(16px,env(safe-area-inset-right));
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.55 var(--disp);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+:focus-visible{outline:2.5px solid var(--sun);outline-offset:2px}
+.wrap{max-width:44rem;margin:0 auto;padding:28px var(--gr) 64px var(--gl)}
+.k{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font:500 10px/1.3 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.k b{font-weight:600;background:var(--ink);color:var(--paper);padding:3px 6px;letter-spacing:.08em}
+.k a{text-decoration:none;border-bottom:1px solid var(--soft)}
+h1{font:850 clamp(48px,13vw,92px)/.84 var(--disp);font-variation-settings:"wdth" 62;text-transform:uppercase;margin:18px 0 14px}
+h1 i{display:inline-block;width:.17em;height:.17em;margin-left:.05em;border-radius:50%;background:var(--sun)}
+.lead{font:600 clamp(18px,4.6vw,22px)/1.3 var(--disp);max-width:36rem}
+h2{font:800 clamp(24px,6vw,32px)/1.05 var(--disp);font-variation-settings:"wdth" 74;text-transform:uppercase;margin:44px 0 12px;padding-top:12px;border-top:3px solid var(--ink)}
+h2 .n{font:600 12px/1 var(--mono);letter-spacing:.1em;color:var(--soft);vertical-align:middle;margin-right:10px;border:1.5px solid currentColor;padding:2px 6px}
+h3{font:600 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:18px 0 6px}
+p{margin:0 0 10px;max-width:40rem}
+ul{margin:0 0 10px 1.1em;max-width:40rem}
+li{margin:0 0 6px}
+code{font:500 .86em/1 var(--mono);background:var(--wash);padding:1px 4px}
+.spec{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:0;border-top:1.5px solid var(--ink);margin:12px 0 4px}
+.spec dt,.spec dd{padding:9px 0;border-bottom:1px solid var(--rule)}
+.spec dt{font:600 10.5px/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft);padding-right:12px}
+.spec dd{font-size:15px;line-height:1.45}
+@media (max-width:520px){.spec{grid-template-columns:1fr}.spec dt{border-bottom:none;padding-bottom:0}.spec dd{padding-top:3px}}
+.toc{list-style:none;margin:22px 0 0;border-top:1.5px solid var(--ink);columns:2;column-gap:24px}
+.toc li{margin:0;padding:7px 0;border-bottom:1px solid var(--rule);break-inside:avoid;font:600 12px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.toc a{text-decoration:none}
+@media (max-width:420px){.toc{columns:1}}
+pre{font:500 12.5px/1.5 var(--mono);background:var(--wash);border-left:3px solid var(--ink);padding:10px 12px;overflow-x:auto;margin:8px 0 12px;max-width:40rem}
+.back{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px 0 12px;border:1.5px solid var(--ink);font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;margin-top:22px}
+.back i{width:11px;height:11px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 1.5px var(--ink)}
+.back:hover{background:var(--ink);color:var(--paper)}
+footer{margin-top:48px;padding-top:12px;border-top:1.5px solid var(--ink);font:500 11px/1.5 var(--mono);color:var(--soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="k"><b>Broken Silo</b><span>Test press</span><span>How it's made</span><a href="./" id="back1">Back to the tracks</a></div>
+  <h1>How it's made<i></i></h1>
+  <p class="lead">A technical guide to the six tracks: where each one's data comes from, how it becomes sound and picture, and the code that runs it.</p>
+  <ol class="toc">
+    <li><a href="#engine">The shared engine</a></li>
+    <li><a href="#build">Data and build</a></li>
+    <li><a href="#i">i · Arrivals</a></li>
+    <li><a href="#ii">ii · Twelve Hundred Springs</a></li>
+    <li><a href="#iii">iii · Weathering</a></li>
+    <li><a href="#iv">iv · Stoops</a></li>
+    <li><a href="#v">v · Light Rail</a></li>
+    <li><a href="#vi">vi · Murals</a></li>
+    <li><a href="#place">Where you are, and your hour</a></li>
+    <li><a href="#credits">Open source and credits</a></li>
+  </ol>
+
+  <h2 id="engine">The shared engine</h2>
+  <p>Broken Silo is one static web page. It uses no frameworks, no audio samples and no server. Every sound is synthesized live in the browser, and every picture is drawn live, so what you hear and see is computed from the data each time you play.</p>
+  <dl class="spec">
+    <dt>Sound</dt><dd>The Web Audio API. One <code>AudioContext</code> with a fixed graph: a master compressor, a reverb whose impulse response is generated in code (decaying filtered noise, 3.2 seconds), and a pad of three detuned triangle oscillators through one lowpass filter. The pad's chord and filter glide between values and are never rebuilt.</dd>
+    <dt>Notes</dt><dd>Each note is a short-lived set of oscillators, filters and gains, built when it plays and disconnected when it ends. Plucks, bells, an FM electric piano, formant voices and the drum kits are all made this way.</dd>
+    <dt>Voice cap</dt><dd>At most about 14 notes sound at once. Voices are counted down by the clock rather than by <code>onended</code>, so a phone that suspends the tab can't leave the count stuck.</dd>
+    <dt>Timing</dt><dd>The sequenced tracks use lookahead scheduling. A 25 ms timer books notes about 160 ms ahead on the audio clock, so the beat stays steady even when drawing stutters. The drawing reads a queue of booked notes and lights each one as it actually sounds.</dd>
+    <dt>Picture</dt><dd>The Canvas 2D API, redrawn every frame with <code>requestAnimationFrame</code>. Static parts are painted once to an offscreen layer and copied each frame. Glows are cached sprite gradients drawn additively, and a film-grain tile gives the plates their printed look. Drawing is scaled for high-density screens.</dd>
+    <dt>Touch</dt><dd>Pointer Events, one handler for mouse, pen and fingers. Each track gets <code>down</code>, <code>move</code> and <code>up</code> calls, and a swept line test lets a fast drag strike every string it crosses.</dd>
+    <dt>Track shape</dt><dd>Each track is a self-contained module with the same parts: a title, its why and source lines, <code>layout</code>, <code>draw</code>, the pointer calls, and <code>enter</code> and <code>leave</code> to start and stop its sound when you switch.</dd>
+  </dl>
+
+  <h2 id="build">Data and build</h2>
+  <ul>
+    <li><b>Preparing the data:</b> Python, with pandas for tables and the rdata package to read R datasets. Each dataset is cleaned, reduced to the fields a track needs and rounded so the whole page stays small.</li>
+    <li><b>Baking it in:</b> the data goes into the page as one JSON object, so the site works offline once loaded and makes no requests while you play.</li>
+    <li><b>Checking:</b> the page's script is pulled out and checked with Node, then run headless against a fake <code>AudioContext</code> to confirm every track lays out, schedules notes and seeks without errors.</li>
+    <li><b>Hosting:</b> GitHub Pages, from the broken-silo repository, at broken-silo.com.</li>
+  </ul>
+
+  <h2 id="i"><span class="n">i</span>Arrivals</h2>
+  <dl class="spec">
+    <dt>Data</dt><dd>U.S. births for every calendar day, averaged over 2000 to 2014. Social Security Administration figures, as published by FiveThirtyEight.</dd>
+    <dt>Mapping</dt><dd>Each of the 366 days is a string on a ring, as long as its births. A 31-day running average sets each string's base pitch, and how far the day falls below its neighbors pulls the pitch down. Holidays, when fewer births are scheduled, become the deepest notes. The scale is D major pentatonic.</dd>
+    <dt>Sound</dt><dd>A plucked string: a triangle wave with a quiet octave sine, through a lowpass that closes as the note dies. The pad changes chord with the season. Drag speed sets loudness, and one gesture strikes up to six strings.</dd>
+    <dt>Picture</dt><dd>Strings colored by the calendar, from winter frost through spring, summer and autumn. A dotted ring marks the average day. Each pluck sends an arc of light outward, brighter on busier days.</dd>
+  </dl>
+
+  <h2 id="ii"><span class="n">ii</span>Twelve Hundred Springs</h2>
+  <dl class="spec">
+    <dt>Data</dt><dd>The day Kyoto's cherry trees reached full bloom, for every year someone wrote it down, from 812 to 2026. Compiled by Yasuyuki Aono, via George Mason University's peak bloom prediction project.</dd>
+    <dt>Mapping</dt><dd>Each blossom is a year, set across from the branch by its bloom date. Earlier springs ring higher, on A major pentatonic from A3. The branch is the 80-year running average, drawn thicker where more springs were recorded, and the pad's filter opens as that average gets earlier.</dd>
+    <dt>Sound</dt><dd>A glass bell: a sine with an octave and a soft twelfth, whose overtones die first. It's placed left to right by where you touch.</dd>
+    <dt>Picture</dt><dd>Lilac for late springs, hot pink for early ones, with falling petals that leave short trails. The branch runs down the screen on a phone and across it on a wide screen.</dd>
+  </dl>
+
+  <h2 id="iii"><span class="n">iii</span>Weathering</h2>
+  <dl class="spec">
+    <dt>Data</dt><dd>Daily rain and high temperature from NOAA's Global Historical Climatology Network, from the weather station nearest each of ten homes, each in a year it was lived in.</dd>
+    <dt>Mapping</dt><dd>A step sequencer at 110 BPM. Each row is a home and each step is a day, sixteen days to a page. A pad sounds only on a day it rained, harder for heavier rain. Tuned voices take their pitch from that day's high.</dd>
+    <dt>Sound</dt><dd>One gentle kit voice per row: kick, brush, hat, shaker, rim, tom, kalimba, bell, clap and marimba, all synthesized. In story mode the beat starts with the first home, and each 128-day chapter adds the next, in the order they were lived in.</dd>
+    <dt>Picture</dt><dd>Raindrops on glass that run longer for heavier rain, and a timeline of every wet day across all homes that you drag to move through the song.</dd>
+  </dl>
+
+  <h2 id="iv"><span class="n">iv</span>Stoops</h2>
+  <dl class="spec">
+    <dt>Data</dt><dd>Baltimore City's Real Property Information (Open Baltimore, CC BY 3.0), in a November 2025 copy filtered to 132,061 lived-in homes with a recorded sale. It's grouped into 224 neighborhoods with 60 or more homes, with each one's average year built, the share built before 1900, by 1934 and since 2000, and its shares of owner-occupied and ground-rent homes.</dd>
+    <dt>Mapping</dt><dd>Neighborhoods play oldest to newest, one per beat. Five rows fire only where a neighborhood stands out against the city: before 1900 as arabber cart bells, owners at home as a chopped chord, ground rent as crab mallets, built since 2000 as the light rail bell, and the biggest blocks as an 808. The bass follows the average build year on A minor pentatonic.</dd>
+    <dt>Sound</dt><dd>Boom-bap at 88 BPM with swung sixteenths. A kick that hits harder for bigger neighborhoods, snare, hats and vinyl crackle all run through one saturator (a tanh waveshaper and a lowpass). A harbor foghorn marks each new decade and 1934, the year the Beaver Dam quarry sent out its last marble.</dd>
+    <dt>Picture</dt><dd>A row of rowhouses, one per neighborhood. Their windows are the pads, and their steps are white marble where most homes went up by 1934.</dd>
+  </dl>
+
+  <h2 id="v"><span class="n">v</span>Light Rail</h2>
+  <dl class="spec">
+    <dt>Data</dt><dd>All 33 Light RailLink stations and their average weekday riders, from the Maryland Transit Administration via Maryland iMap. Station positions come in the state's own grid (Maryland State Plane, meters), and city stops are matched to their neighborhood with a point-in-polygon test, to bring in their homes from Stoops.</dd>
+    <dt>Mapping</dt><dd>The song rides Hunt Valley to BWI, then the Cromwell branch. Each stop is one bar, and its riders, on a log scale, set how many of the bar's sixteen steps play: from one note at Ferndale (91 riders) to twelve at Lexington Street (2,989). The notes are spread evenly with a Euclidean rhythm. Each ride lasts one bar per 1.6 km of track, up to four.</dd>
+    <dt>Sound</dt><dd>An FM electric piano (a sine modulating a sine, its brightness falling with each note) over D, B minor, G and A at 96 BPM. Rides add rail-joint clacks that quicken mid-ride, a motor whine that rises and falls, and a motorik pulse. Stops in a Stoops neighborhood add a short chopped chord.</dd>
+    <dt>Picture</dt><dd>The line drawn to scale over the city's outline and harbor, with stops sized by riders and a train that eases between them.</dd>
+    <dt>Play along</dt><dd>A tap off the line adds your own note, pitched by height, that loops on its step for eight bars and fades. A tap on a stop boards there.</dd>
+  </dl>
+
+  <h2 id="vi"><span class="n">vi</span>Murals</h2>
+  <dl class="spec">
+    <dt>Data</dt><dd>Baltimore's public art inventory: 1,091 dated murals, sculptures, monuments, mosaics and reliefs from 1792 to 2022, with where each stands and whether it's still there. Made by Eli Pousson and C. Ryan Patterson with the Commission for Historical and Architectural Preservation, Baltimore Heritage and the Baltimore Office of Promotion and the Arts, updated January 2023.</dd>
+    <dt>Mapping</dt><dd>One note per work, oldest to newest, at 92 BPM. North-south position sets pitch (north is higher, D major pentatonic), and east-west sets the stereo position. Loudness falls off with distance from your listening ring, as 1 / (1 + (d / 1.8 km)²), with a floor so the whole city stays faintly audible.</dd>
+    <dt>Sound</dt><dd>Murals sing, as two detuned sawtooths through two vowel formant filters. Bronze and stone ring, as a struck bar with overtones at 2.76 and 5.4 times the pitch, like real metal. Tile shimmers as a glass bell, and reliefs knock like wood. The 131 works that are gone, demolished, painted over or removed, still play, muffled and quieter.</dd>
+    <dt>Picture</dt><dd>Every work as a faint mark on the city map, colored by kind, with gone works as hollow rings. The song lights them as it reaches them, and a timeline shows each year as wide as its works.</dd>
+    <dt>Play along</dt><dd>Drag the ring to listen from anywhere in the city, or tap a dot to hear one work.</dd>
+  </dl>
+
+  <h2 id="place">Where you are, and your hour</h2>
+  <p>Light Rail and Murals play in full for anyone, anywhere. Two layers change them for you:</p>
+  <ul>
+    <li><b>Your location, if you choose:</b> the page asks only when you tap "board near me" or "listen from here", through the browser's Geolocation API. In or near Baltimore, Light Rail boards at your nearest stop and Murals listens from where you stand. Anywhere else, the page works out your compass bearing from City Hall and boards at the stop that points your way, or listens from the city's edge in your direction. Your position is turned into the city's grid with the Lambert conformal conic formulas for Maryland, used on the page and never stored or sent anywhere.</li>
+    <li><b>Your hour:</b> your device's clock sets the light. After dark the plates go deeper, glows grow stronger and the pad's filter closes; by day it opens up.</li>
+  </ul>
+
+  <h2 id="credits">Open source and credits</h2>
+  <ul>
+    <li><b>Code:</b> all written for Broken Silo. The page ships no third-party code apart from its two Google Fonts, Archivo and IBM Plex Mono.</li>
+    <li><b>Datasets:</b> Social Security Administration and FiveThirtyEight (Arrivals), Yasuyuki Aono and George Mason University (Springs), NOAA GHCN-Daily (Weathering), Baltimore City Open Baltimore, CC BY 3.0 (Stoops), and Maryland Transit Administration and Maryland iMap (Light Rail). Murals uses the public art inventory credited above. Light Rail's and Murals' data comes by way of Eli Pousson's mapbaltimore package (MIT).</li>
+    <li><b>Ideas borrowed, not code:</b> rides along a transit line from Brian Foo's Two Trains, location-aware listening from Bluebrain's The National Mall, notes that loop and fade from Brian Eno and Peter Chilvers' Bloom, and Euclidean rhythms from Godfried Toussaint's work on spreading beats evenly.</li>
+  </ul>
+  <a class="back" href="./" id="back2"><i></i>Back to the tracks</a>
+  <footer>Broken Silo · data you can hear and see · built by Tanner Spaulding</footer>
+</div>
+<script>
+// return to the tracks the way you came, where there's a way back
+["back1","back2"].forEach(id=>{const a=document.getElementById(id);a.addEventListener("click",e=>{if(history.length>1&&document.referrer){e.preventDefault();history.back();}});});
+</script>
+</body>
+</html>
